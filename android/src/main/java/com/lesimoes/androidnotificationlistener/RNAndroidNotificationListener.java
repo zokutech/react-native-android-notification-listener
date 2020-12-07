@@ -22,8 +22,6 @@ public class RNAndroidNotificationListener extends NotificationListenerService {
     public void onNotificationPosted(StatusBarNotification sbn) {
         Notification notification = sbn.getNotification();
         StatusBarNotification[] nots = getActiveNotifications();
-        System.out.println(nots);
-        System.out.println("blleeep");
         if (notification == null || notification.extras == null) return;
         
         String app = sbn.getPackageName();
@@ -40,7 +38,7 @@ public class RNAndroidNotificationListener extends NotificationListenerService {
 
         if (text == null || text == "" || title == null || title == "") return;
 
-//        Log.d(TAG, "Notification received: " + app + " | " + title + " | " + text);
+        Log.d(TAG, "Notification received: " + app + " | " + title + " | " + text);
 
         WritableMap params = Arguments.createMap();
         params.putString("app", app);
@@ -48,13 +46,11 @@ public class RNAndroidNotificationListener extends NotificationListenerService {
         params.putString("text", text);
 
 //        =============================================================================
+        WritableMap exportedNotificationsMap = new WritableNativeMap();
         WritableArray not2 = new WritableNativeArray();
         for (int i = nots.length - 1; i >= 0; i--) {
             StatusBarNotification noti = nots[i];
                     Notification notificationL = noti.getNotification();
-//        StatusBarNotification[] nots = getActiveNotifications();
-        System.out.println(noti);
-        System.out.println("blleeep2");
         if (notificationL == null || notificationL.extras == null) break;
 
         String appL = noti.getPackageName();
@@ -71,23 +67,19 @@ public class RNAndroidNotificationListener extends NotificationListenerService {
 
         if (textL == null || textL == "" || titleL == null || titleL == "") break;
 
-        Log.d(TAG, "Notification received5: " + appL + " | " + titleL + " | " + textL);
-        System.out.println(nots.length);
-//        System.out.println("blleeep3");
+        Log.d(TAG, "Notification in Tray: " + appL + " | " + titleL + " | " + textL);
         WritableMap paramsL = Arguments.createMap();
         paramsL.putString("app", appL);
         paramsL.putString("title", titleL);
         paramsL.putString("text", textL);
-        System.out.println(paramsL.toString());
         not2.pushMap(paramsL);
         }
-        System.out.println("NOTIFICATIONS IN THE TRAY");
-        System.out.println(not2.toString());
 //        =============================================================================
+        exportedNotificationsMap.putArray("notifications", not2);
+        RNAndroidNotificationListenerModule.sendEvent("allNotifications", exportedNotificationsMap);
         RNAndroidNotificationListenerModule.sendEvent("notificationReceived", params);
 
     }
-
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {}
 }
