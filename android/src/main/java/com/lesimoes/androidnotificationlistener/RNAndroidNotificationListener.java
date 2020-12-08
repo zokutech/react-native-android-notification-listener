@@ -30,11 +30,15 @@ public class RNAndroidNotificationListener extends NotificationListenerService {
 
         CharSequence titleChars = notification.extras.getCharSequence(Notification.EXTRA_TITLE);
         CharSequence textChars = notification.extras.getCharSequence(Notification.EXTRA_TEXT);
+        int number = notification.number;
+        long dateTimeLong = notification.when;
+        int priority = notification.priority;
 
         if (titleChars == null || textChars == null) return;
         
         String title = titleChars.toString();
         String text = textChars.toString();
+        String dateTime = dateTimeLong + "";
 
         if (text == null || text == "" || title == null || title == "") return;
 
@@ -44,6 +48,9 @@ public class RNAndroidNotificationListener extends NotificationListenerService {
         params.putString("app", app);
         params.putString("title", title);
         params.putString("text", text);
+        params.putInt("number", number);
+        params.putString("dateTime", dateTime);
+        params.putInt("priority", priority);
 
 //        =============================================================================
         WritableMap exportedNotificationsMap = new WritableNativeMap();
