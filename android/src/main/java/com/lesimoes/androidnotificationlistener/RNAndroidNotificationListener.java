@@ -59,11 +59,15 @@ public class RNAndroidNotificationListener extends NotificationListenerService {
 
         CharSequence titleCharsL = notificationL.extras.getCharSequence(Notification.EXTRA_TITLE);
         CharSequence textCharsL = notificationL.extras.getCharSequence(Notification.EXTRA_TEXT);
+        int numberL = notificationL.number;
+        long dateTimeLongL = notificationL.when;
+        int priorityL = notificationL.priority;
 
         if (titleCharsL == null || textCharsL == null) break;
 
         String titleL = titleCharsL.toString();
         String textL = textCharsL.toString();
+        String dateTimeL = dateTimeLongL + "";
 
         if (textL == null || textL == "" || titleL == null || titleL == "") break;
 
@@ -72,6 +76,9 @@ public class RNAndroidNotificationListener extends NotificationListenerService {
         paramsL.putString("app", appL);
         paramsL.putString("title", titleL);
         paramsL.putString("text", textL);
+        paramsL.putInt("number", numberL);
+        paramsL.putString("dateTime", dateTimeL);
+        paramsL.putInt("priority", priorityL);
         not2.pushMap(paramsL);
         }
 //        =============================================================================
